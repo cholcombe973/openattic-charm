@@ -1,0 +1,43 @@
+includes: ['layer:basic', 'layer:apt', 'interface:ceph-client']  # if you use any interfaces, add them here
+repo:
+  url: https://github.com/cholcombe973/
+options:
+  apt:
+    packages:
+      - openattic
+      - openattic-module-ceph
+    install_sources: |
+      - deb http://apt.openattic.org trusty main
+    install_keys: |
+      - |
+        -----BEGIN PGP PUBLIC KEY BLOCK-----
+        Version: GnuPG v1
+
+        mQENBE9UiJQBCADXaeyPt9tZLeC3cRQX33BP22hG8LRp4MBdoyC95/VP6sFp7i6r
+        y1djlAUxED0w8DPINxuDlez5PBUP1Dwq3NzJ8f1aeUyvvcIFnAwnafcfcjFO0D5X
+        1F6bSl0FDj32c5Ro47bkI2UgEX7hb+8uX6Z3iGqPa1v24MsLxB3nxihgXJIXfDM4
+        7TzijoxvgQkqF1fKjiRdlETGX0/SqVhxirPTrpnAAY84G5OOPvmgaxPZIZ6lQrzg
+        0x1sTBl9j1fK0bpq1GK58cMJB4CndbqBe4bLi0okSBWV029+QGDzTk1wQw2hIiY9
+        wD7vzxmkoWaQr7p7QlCmzU3DGzjPq39i3+yhABEBAAG0MUJ1c2luZXNzIENyaXRp
+        Y2FsIENvbXB1dGluZyA8aXMtYmNjQGl0LW5vdnVtLmNvbT6JATgEEwECACIFAk9U
+        iJQCGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEB1c1E2n0+r6MtEIAK2W
+        1S2bYNGKvsXxhNflKDktlPQpnkmthGX0+3V/9PnE1hTKH/Mzmr01QlfmM8qTpma3
+        Z/Es1DVfGZmh6ZNbFgoVeMVEaZvrHhSlfKT9QMcA/cMnRsk9BaWqQ01G18N4rydh
+        IAHYnPwcT+16WTYb5qBS8N+1dAYXCIknJPs45ur2QMqfc5IrUX5Cs14kwym4RZAn
+        8Y9pMHgoycVZSMxMR6NOUfJ5QuaUABJ2RcEdfycv0ydhSld47SfNc52ncIEF2aVK
+        6PRZyuSGh2g89YuNH+sRRrfS76AsSwLESFMH0Ks1KBJUGtVAT4m0uofr46NxlYti
+        UxiI0m/XZbWulBhsbm+5AQ0ET1SIlAEIALsOTZMwSYQreTB8SN7ZyI6TlGbIfzFf
+        0aHaw7MJKHtoRWojp+eZIozhQP4sVFWRH27Hx3tmkEsiuhnb6TOU7JIfXXFIXjEo
+        1iPAZ/yRGhVLh9O/nDrwwvXb3fwdTdS05EI+7fpbLXWBK7KPYFp42fh9I6HINMdo
+        9HACk9sLPzWqsHA+S/SGCPJ8CwifyYwfe14nG5STY95APi+iYdxAZ3Qes7TPrFvG
+        qUlRAgNQeLOPFXF0qnSCgfMcQVu7JibyK5YYRQ2wmhYK4wnlM9h6oPdarur8/t9K
+        JemFPM85O+Pfknuu+4HOrr1acziekv03YRkuvcjBQu+LBbL9D1JrlBcAEQEAAYkB
+        HwQYAQIACQUCT1SIlAIbDAAKCRAdXNRNp9Pq+pUKCACKAxI9mQDFANzbWGzKgmTD
+        vvGfNjrX1ZaOynLU8DUm56+tqk8J8kRm6XAqZar8NwbUFrEyS6HCXubmn90RsrjS
+        Pm7lhqwGLfp0OlX0XNV8ev5gpGp1IdkveS0b1Pd3Ksj5IIGwjz8rJh8D/rOSJh2t
+        ZwMnm3hzQrCsl+CNxi7GcCaUHAXqQw1YqNKZP4OsvtEj6sBA/6HrBQR+xMMfGO1t
+        GZbUKDIiJwLyvZyNxp3YRJvGrVxO/q/zOeGUdV+nI68Yox8fD9eadHdXTVtawdlf
+        mK4C7aS5LpcqMGm284IjO2ZtbskTrtyx4YCh+S0jgxkeBVcDQrnPWc30TCCC2gQO
+        =DgzK
+        -----END PGP PUBLIC KEY BLOCK-----
+
