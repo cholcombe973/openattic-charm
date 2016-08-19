@@ -1,0 +1,37 @@
+openattic-pgsql	openattic/app-password-confirm	password openattic
+
+# PostgreSQL application password for openattic:
+openattic-pgsql	openattic/pgsql/app-pass	password openattic
+openattic-pgsql	openattic/pgsql/admin-pass	password openattic
+openattic-pgsql	openattic/password-confirm	password openattic
+
+# Do you want to back up the database for openattic before upgrading?
+openattic-pgsql	openattic/upgrade-backup	boolean	true
+openattic-pgsql	openattic/internal/skip-preseed	boolean	false
+
+# Do you want to purge the database for openattic?
+openattic-pgsql	openattic/purge	boolean	false
+
+# Database type to be used by openattic:
+openattic-pgsql	openattic/database-type	select	pgsql
+
+# Perform upgrade on database for openattic with dbconfig-common?
+openattic-pgsql	openattic/dbconfig-upgrade	boolean	true
+
+# Configure database for openattic with dbconfig-common?
+openattic-pgsql	openattic/dbconfig-install	boolean	true
+openattic-pgsql	openattic/remove-error	select	abort
+
+# Deconfigure database for openattic with dbconfig-common?
+openattic-pgsql	openattic/dbconfig-remove	boolean
+openattic-pgsql	openattic/pgsql/admin-user	string	postgres
+
+# Reinstall database for openattic?
+openattic-pgsql	openattic/dbconfig-reinstall	boolean	false
+
+# Connection method for PostgreSQL database of openattic:
+openattic-pgsql	openattic/pgsql/method	select	unix socket
+
+# PostgreSQL database name for openattic:
+openattic-pgsql	openattic/db/dbname	string	openattic
+

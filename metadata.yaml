@@ -1,19 +1,14 @@
 name: openattic
-summary: <Fill in summary here>
-maintainer: chris <chris@chris-HP-Z400-Workstation>
+summary: Openattic is a central storage management system.
+maintainer: Chris Holcombe <xfactor973@gmail.com>
 description: |
-  <Multi-line description here>
+  openATTIC is a full-fledged central storage management system. Hardware resources can be managed, logical storage areas can be shared and distributed and data can be stored more efficiently and less expensively than ever before – and you can control everything from a central management interface. It is no longer necessary to be intimately familiar with the inner workings of the individual storage tools. Any task can be carried out by either using openATTIC‘s intuitive web interface or via the REST API.
 tags:
-  # Replace "misc" with one or more whitelisted tags from this list:
-  # https://jujucharms.com/docs/stable/authors-charm-metadata
+  - storage
+  - file-servers
   - misc
+# series: ['trusty']
 subordinate: false
-provides:
-  provides-relation:
-    interface: interface-name
 requires:
-  requires-relation:
-    interface: interface-name
-peers:
-  peer-relation:
-    interface: interface-name
+  ceph-client:
+    interface: ceph-client
