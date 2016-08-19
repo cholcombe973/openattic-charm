@@ -7,7 +7,8 @@ tags:
   - storage
   - file-servers
   - misc
-# series: ['trusty']
+series: 
+  - trusty
 subordinate: false
 requires:
   ceph-client:
