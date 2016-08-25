@@ -11,5 +11,5 @@ series:
   - trusty
 subordinate: false
 requires:
-  ceph-client:
-    interface: ceph-client
+  ceph-admin:
+    interface: ceph-admin

@@ -1,11 +1,6 @@
 includes:
   - layer:basic
   - layer:apt
-  - interface:ceph-client
+  - interface:/home/chris/repos/juju-interface-ceph-admin
 
 repo: git@github.com:cholcombe973/openattic-charm.git
-#options:
-#    apt:
-#        packages:
-#            - openattic
-#            - openattic-module-ceph
