@@ -1,6 +1,7 @@
 import os
 from subprocess import check_output
 
+from charms import apt
 from charms.reactive import when_not, set_state, when
 from charmhelpers.core.hookenv import (
     log,
@@ -46,34 +47,27 @@ def connect_to_ceph(ceph_client):
     status_set('active', '')
 
 
-@when_not('apt.needs_update')
-@when_not('openattic.installed')
-def install_openattic():
+@when_not('apt.installed.openattic')
+def setup_debconf():
     # Tell debconf where to find answers fo the openattic questions
+    # my_env = os.environ.copy()
+    # my_env['DEBIAN_FRONTEND'] = "noninteractive"
     charm_debconf = os.path.join(os.getenv('CHARM_DIR'),
                                  'files',
                                  'openattic-answers')
     check_output(['debconf-set-selections', charm_debconf])
-
     # Install openattic in noninteractive mode
-    my_env = os.environ.copy()
-    my_env['DEBIAN_FRONTEND'] = "noninteractive"
-    status_set('maintenance', 'installing openattic')
-    try:
-        check_output(
-            [
-                'apt-get',
-                '-y',
-                'install',
-                # This is needed for the openattic LIO module
-                'linux-image-extra-{}'.format(os.uname()[2]),
-                'openattic',
-                'openattic-module-ceph'
-            ],
-            env=my_env)
-    except OSError as e:
-        log("apt-get install failed with error: {}".format(e))
-        raise e
+    apt.queue_install(
+        [
+            "openattic",
+            "openattic-module-ceph",
+            "linux-image-extra-{}".format(os.uname()[2])
+        ])
+
+
+@when('apt.installed.openattic')
+def configure_openattic():
+    status_set('maintenance', 'configuring openattic')
     try:
         # Setup openattic post apt-get install and start the service
         check_output(['oaconfig', 'install', '--allow-broken-hostname'])
@@ -82,5 +76,3 @@ def install_openattic():
         raise e
     open_port(port=80)
     status_set('maintenance', '')
-
-    set_state('openattic.installed')
