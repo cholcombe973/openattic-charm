@@ -1,7 +1,8 @@
 import os
 from subprocess import check_output
 
-from charms.reactive import when_not, set_state, when
+from charms import apt
+from charms.reactive import when_not, when, set_state
 from charmhelpers.core.hookenv import (
     log,
     open_port, status_set)
@@ -36,44 +37,42 @@ def connect_to_ceph(ceph_client):
         'loglevel': '0',
     }
 
-    with open(charm_ceph_conf, 'w') as cephconf:
-        cephconf.write(render_template('ceph.conf', ceph_context))
+    try:
+        with open(charm_ceph_conf, 'w') as ceph_conf:
+            ceph_conf.write(render_template('ceph.conf', ceph_context))
+    except IOError as err:
+        log("IOError writing ceph.conf: {}".format(err.message))
 
-    with open(cephx_key, 'w') as key_file:
-        key_file.write("[client.admin]\n\tkey = {}\n".format(
-            ceph_client.key()
-        ))
-    status_set('active', '')
+    try:
+        with open(cephx_key, 'w') as key_file:
+            key_file.write("[client.admin]\n\tkey = {}\n".format(
+                ceph_client.key()
+            ))
+    except IOError as err:
+        log("IOError writing ceph.client.admin.keyring: {}".format(err.message))
+    set_state('ceph.configured')
 
 
-@when_not('apt.needs_update')
-@when_not('openattic.installed')
-def install_openattic():
+@when_not('apt.installed.openattic')
+def setup_debconf():
     # Tell debconf where to find answers fo the openattic questions
     charm_debconf = os.path.join(os.getenv('CHARM_DIR'),
                                  'files',
                                  'openattic-answers')
     check_output(['debconf-set-selections', charm_debconf])
-
     # Install openattic in noninteractive mode
-    my_env = os.environ.copy()
-    my_env['DEBIAN_FRONTEND'] = "noninteractive"
-    status_set('maintenance', 'installing openattic')
-    try:
-        check_output(
-            [
-                'apt-get',
-                '-y',
-                'install',
-                # This is needed for the openattic LIO module
-                'linux-image-extra-{}'.format(os.uname()[2]),
-                'openattic',
-                'openattic-module-ceph'
-            ],
-            env=my_env)
-    except OSError as e:
-        log("apt-get install failed with error: {}".format(e))
-        raise e
+    apt.queue_install(
+        [
+            "openattic",
+            "openattic-module-ceph",
+            "linux-image-extra-{}".format(os.uname()[2])
+        ])
+
+
+@when('ceph.configured')
+@when('apt.installed.openattic')
+def configure_openattic():
+    status_set('maintenance', 'configuring openattic')
     try:
         # Setup openattic post apt-get install and start the service
         check_output(['oaconfig', 'install', '--allow-broken-hostname'])
@@ -81,6 +80,4 @@ def install_openattic():
         log("oaconfig install failed with {}".format(e))
         raise e
     open_port(port=80)
-    status_set('maintenance', '')
-
-    set_state('openattic.installed')
+    status_set('active', '')
