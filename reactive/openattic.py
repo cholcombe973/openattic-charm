@@ -2,7 +2,7 @@ import os
 from subprocess import check_output
 
 from charms import apt
-from charms.reactive import when_not, set_state, when
+from charms.reactive import when_not, when, set_state
 from charmhelpers.core.hookenv import (
     log,
     open_port, status_set)
@@ -37,21 +37,25 @@ def connect_to_ceph(ceph_client):
         'loglevel': '0',
     }
 
-    with open(charm_ceph_conf, 'w') as cephconf:
-        cephconf.write(render_template('ceph.conf', ceph_context))
+    try:
+        with open(charm_ceph_conf, 'w') as ceph_conf:
+            ceph_conf.write(render_template('ceph.conf', ceph_context))
+    except IOError as err:
+        log("IOError writing ceph.conf: {}".format(err.message))
 
-    with open(cephx_key, 'w') as key_file:
-        key_file.write("[client.admin]\n\tkey = {}\n".format(
-            ceph_client.key()
-        ))
-    status_set('active', '')
+    try:
+        with open(cephx_key, 'w') as key_file:
+            key_file.write("[client.admin]\n\tkey = {}\n".format(
+                ceph_client.key()
+            ))
+    except IOError as err:
+        log("IOError writing ceph.client.admin.keyring: {}".format(err.message))
+    set_state('ceph.configured')
 
 
 @when_not('apt.installed.openattic')
 def setup_debconf():
     # Tell debconf where to find answers fo the openattic questions
-    # my_env = os.environ.copy()
-    # my_env['DEBIAN_FRONTEND'] = "noninteractive"
     charm_debconf = os.path.join(os.getenv('CHARM_DIR'),
                                  'files',
                                  'openattic-answers')
@@ -65,6 +69,7 @@ def setup_debconf():
         ])
 
 
+@when('ceph.configured')
 @when('apt.installed.openattic')
 def configure_openattic():
     status_set('maintenance', 'configuring openattic')
@@ -75,4 +80,4 @@ def configure_openattic():
         log("oaconfig install failed with {}".format(e))
         raise e
     open_port(port=80)
-    status_set('maintenance', '')
+    status_set('active', '')
