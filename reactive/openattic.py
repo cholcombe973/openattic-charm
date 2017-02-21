@@ -69,6 +69,12 @@ def setup_debconf():
         ])
 
 
+@when_not('ceph.configured')
+@when('apt.installed.openattic')
+def waiting_for_relations():
+    status_set('waiting', 'waiting for relations to join')
+
+
 @when('ceph.configured')
 @when('apt.installed.openattic')
 def configure_openattic():
